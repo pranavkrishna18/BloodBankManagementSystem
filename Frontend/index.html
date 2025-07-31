@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome | Blood Bank</title>
+  <link rel="stylesheet" href="css/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+<body>
+
+  <!-- 🌟 Hero Section -->
+  <section class="hero">
+    <h1>Donate Blood, Save Lives</h1>
+    <p>Your blood can bring someone back to life. Be a hero today.</p>
+    <div class="btn-group">
+      <a href="register.html" class="btn-primary">📝 Register Now</a>
+      <a href="login.html" class="btn-primary alt">🔐 Login</a>
+    </div>
+  </section>
+
+  <!-- 📊 Blood Inventory Section -->
+  <section class="inventory-section">
+    <div class="inventory-header">
+      <h2>📦 Available Blood Units</h2>
+      <button onclick="loadInventory()" class="refresh-btn">🔄 Refresh</button>
+    </div>
+    <canvas id="bloodChart" height="300"></canvas>
+    <p class="note" id="inventoryNote">Loading inventory...</p>
+  </section>
+
+  <!-- 🚨 Emergency Section -->
+  <section class="emergency">
+    <h2>🚨 Emergency Contact</h2>
+    <p>📞 +91-9876543210</p>
+    <p>📍 Central Blood Bank, Vijayawada</p>
+    <p>🕒 Open 24/7 for emergencies</p>
+  </section>
+
+  <!-- ❤️ About Section -->
+  <section class="about">
+    <h2>❤️ Our Mission</h2>
+    <p>We aim to ensure no patient dies due to the unavailability of blood. Join us in making a difference by donating blood and helping those in need.</p>
+  </section>
+
+  <!-- 👣 Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
+  </footer>
+
+  <!-- 📜 Inventory Script -->
+  <script>
+    async function loadInventory() {
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/public-inventory");
+        const data = await res.json();
+
+        const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+        const inventoryMap = Object.fromEntries(bloodGroups.map(bg => [bg, 0]));
+
+        data.forEach(item => {
+          inventoryMap[item.bloodType] = item.units;
+        });
+
+        const ctx = document.getElementById("bloodChart").getContext("2d");
+        if (window.chartInstance) window.chartInstance.destroy(); // prevent overlay
+
+        const total = Object.values(inventoryMap).reduce((sum, v) => sum + v, 0);
+        const lowStock = bloodGroups.filter(bg => inventoryMap[bg] <= 5);
+
+        document.getElementById("inventoryNote").textContent =
+          `🩸 Total Units Available: ${total} ${
+            lowStock.length ? ` | ⚠️ Low Stock: ${lowStock.join(", ")}` : ""
+          }`;
+
+        window.chartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: bloodGroups,
+            datasets: [{
+              label: "Available Units",
+              data: bloodGroups.map(bg => inventoryMap[bg]),
+              backgroundColor: bloodGroups.map(bg =>
+                inventoryMap[bg] <= 5 ? "#e63946" : "#219ebc"
+              ),
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              datalabels: {
+                color: '#111',
+                anchor: 'end',
+                align: 'start',
+                font: {
+                  weight: 'bold',
+                  size: 14
+                },
+                formatter: value => `${value} 🔻`
+              },
+              title: {
+                display: true,
+                text: "Current Blood Inventory",
+                font: { size: 20 }
+              },
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  font: { size: 14 }
+                },
+                title: {
+                  display: true,
+                  text: "Units",
+                  font: { size: 16 }
+                }
+              },
+              x: {
+                ticks: {
+                  font: { size: 14 }
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+      } catch (err) {
+        document.getElementById("inventoryNote").textContent =
+          "❌ Failed to load inventory.";
+        console.error("Inventory Load Error:", err);
+      }
+    }
+
+    loadInventory();
+  </script>
+</body>
+</html>

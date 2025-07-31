@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recipient Dashboard | Blood Bank</title>
+  <link rel="stylesheet" href="css/admin.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+  <!-- 🔄 Loading Spinner -->
+  <div class="loader-container" id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- 🔝 Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">🩸 Blood Bank</div>
+    <div class="nav-links">
+      <span>Hi, <strong id="usernameDisplay"></strong>!</span>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- 🧾 Main Dashboard -->
+  <div class="container">
+    <h2>🏥 Recipient Dashboard</h2>
+
+    <!-- 🩸 Blood Request Form -->
+    <div class="card">
+      <h3>📤 Submit a Blood Request</h3>
+      <form id="requestForm" class="form-grid">
+        <input type="text" id="bloodType" placeholder="Blood Type (e.g., O+)" required />
+        <input type="text" id="location" placeholder="Your Location" required />
+        <input type="date" id="requestDate" required /> <!-- 📅 Date field -->
+        <button type="submit" class="btn">Request Blood</button>
+      </form>
+      <div id="requestAlert" class="alert"></div>
+    </div>
+
+    <!-- 📜 Request History -->
+    <div class="card">
+      <h3>📜 Your Previous Requests</h3>
+      <ul id="requestHistory" class="history-list"></ul>
+    </div>
+  </div>
+  
+   <h2>✅ Your Approved Blood Requests</h2>
+   <div id="approvedRequests" class="grouped-requests"></div>
+
+
+  <!-- 👣 Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
+  </footer>
+
+  <!-- 📜 Recipient Script -->
+  <script src="js/recipient.js"></script>
+
+  <!-- 🛑 Prevent past dates -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('requestDate').setAttribute('min', today);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | Blood Bank</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- 🔄 Loading Spinner -->
+  <div class="loader-container" id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- 🔝 Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">🩸 Blood Bank</div>
+    <div class="nav-links">
+      <span>Hi, <strong id="usernameDisplay"></strong>!</span>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- 📋 Main Admin Section -->
+  <div class="container">
+    <h2>🛠️ Admin Dashboard</h2>
+
+    <!-- 📩 Pending Requests -->
+    <h3>Pending Blood Requests</h3>
+
+    <!-- 🔍 Filter and Count -->
+    <div id="filterSection">
+      <label for="filterSelect"><strong>Filter by Blood Type:</strong></label>
+      <select id="filterSelect" style="margin: 0 10px; padding: 5px; border-radius: 5px;">
+        <option value="">All</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
+      <p id="totalRequestsCount" style="margin-top: 10px; color: #555;"></p>
+    </div>
+
+    <ul id="pendingRequests" class="history-list"></ul>
+
+    <!-- 📊 Inventory Chart -->
+    <h3>🩸 Blood Inventory Overview</h3>
+    <canvas id="inventoryChart" height="250"></canvas>
+    <p id="lastUpdatedNote" style="font-size: 14px; color: #777; margin-top: 10px;"></p>
+
+    <!-- 📈 Weekly Donation Trends -->
+    <h3>📈 Weekly Donation Trends</h3>
+    <canvas id="weeklyDonationsChart" height="220"></canvas>
+
+    <!-- 💉 Most Requested Blood Groups -->
+    <h3>💉 Most Requested Blood Groups</h3>
+    <canvas id="topBloodChart" height="220"></canvas>
+
+    <!-- 📍 Location-wise Donor/Recipient Stats -->
+    <h3>📍 Number of Donor/Recipient Stats</h3>
+    <canvas id="locationChart" height="220"></canvas>
+
+  </div>
+
+  <!-- 👣 Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
+  </footer>
+
+  <!-- 🧠 Admin Script -->
+  <script src="js/admin.js"></script>
+</body>
+</html>

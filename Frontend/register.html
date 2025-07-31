@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | Blood Bank</title>
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>📝 Register for Blood Bank</h2>
+      <form id="registerForm">
+        <input type="text" id="name" placeholder="Full Name" required />
+        <input type="email" id="email" placeholder="Email Address" required />
+        <input type="password" id="password" placeholder="Create Password" required />
+        <select id="role" required>
+          <option value="">Select Role</option>
+          <option value="donor">Donor</option>
+          <option value="recipient">Recipient</option>
+        </select>
+        <button type="submit" class="btn">🩸 Register</button>
+        <div id="registerAlert" class="alert"></div>
+        <p class="link-text">Already have an account? <a href="login.html">Login here</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/register.js"></script>
+</body>
+</html>
