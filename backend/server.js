@@ -43,5 +43,6 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at https://blood-bank-system-dtld.onrender.com`);
+  //  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
