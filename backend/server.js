@@ -9,6 +9,13 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+//added to check frontend to backend connectivity
+var originURL = 'https://bloodbankmanagementsystem-0lla.onrender.com'; // Should be set to your frontend URL, e.g., https://your-frontend.com
+var corsOptions = {
+  origin: originURL,
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
 // Middleware
 app.use(cors());
