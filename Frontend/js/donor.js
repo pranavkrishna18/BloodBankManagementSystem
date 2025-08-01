@@ -41,7 +41,7 @@ donationForm.addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/api/donor/donate', {
+    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/donate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function showAlert(message, type = 'success') {
 // 📜 Load donation history
 async function loadHistory() {
   try {
-    const res = await fetch('http://localhost:5000/api/donor/history', {
+    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/history', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -115,7 +115,7 @@ async function loadHistory() {
 // ⏳ Load eligibility info
 async function loadEligibility() {
   try {
-    const res = await fetch('http://localhost:5000/api/donor/eligibility', {
+    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/eligibility', {
       headers: {
         Authorization: `Bearer ${token}`
       }

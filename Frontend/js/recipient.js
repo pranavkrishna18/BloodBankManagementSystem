@@ -32,7 +32,7 @@ requestForm.addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/api/recipient/request', {
+    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/recipient/request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ function showAlert(message, type = 'success') {
 // 📜 Load Recipient Request History
 async function loadHistory() {
   try {
-    const res = await fetch('http://localhost:5000/api/recipient/my-requests', {
+    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/recipient/my-requests', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -132,7 +132,7 @@ function logout() {
 loadHistory();
 async function loadApprovedRequests() {
   try {
-    const res = await fetch("http://localhost:5000/api/recipient/approved-requests", {
+    const res = await fetch("https://blood-bank-system-dtld.onrender.com/api/recipient/approved-requests", {
       headers: { Authorization: `Bearer ${token}` }
     });
 

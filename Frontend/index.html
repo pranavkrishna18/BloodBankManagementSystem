@@ -53,7 +53,7 @@
   <script>
     async function loadInventory() {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/public-inventory");
+        const res = await fetch("https://blood-bank-system-dtld.onrender.com/api/admin/public-inventory");
         const data = await res.json();
 
         const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
