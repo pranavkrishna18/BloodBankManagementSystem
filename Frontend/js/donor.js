@@ -32,22 +32,23 @@ donationForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const bloodType = document.getElementById('bloodType').value.trim();
+  const city = document.getElementById('city').value.trim();
   const location = document.getElementById('location').value.trim();
   const donationDate = document.getElementById('donationDate').value;
 
-  if (!bloodType || !location || !donationDate) {
+  if (!bloodType || !city || !location || !donationDate) {
     showAlert('❗ Please fill in all fields', 'error');
     return;
   }
 
   try {
-    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/donate', {
+    const res = await fetch('http://localhost:3000/api/donor/donate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ bloodType, location, date: donationDate })
+      body: JSON.stringify({ bloodType, city, location, date: donationDate })
     });
 
     const data = await res.json();
@@ -79,7 +80,7 @@ function showAlert(message, type = 'success') {
 // 📜 Load donation history
 async function loadHistory() {
   try {
-    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/history', {
+    const res = await fetch('http://localhost:3000/api/donor/history', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -115,7 +116,7 @@ async function loadHistory() {
 // ⏳ Load eligibility info
 async function loadEligibility() {
   try {
-    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/eligibility', {
+    const res = await fetch('http://localhost:3000/api/donor/eligibility', {
       headers: {
         Authorization: `Bearer ${token}`
       }

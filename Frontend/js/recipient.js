@@ -23,22 +23,23 @@ requestForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const bloodType = document.getElementById('bloodType').value.trim();
+  const city = document.getElementById('city').value.trim();
   const location = document.getElementById('location').value.trim();
   const requestDate = document.getElementById('requestDate').value; // 📅 New field
 
-  if (!bloodType || !location || !requestDate) {
+  if (!bloodType || !city || !location || !requestDate) {
     showAlert('❗ Please fill all fields', 'error');
     return;
   }
 
   try {
-    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/recipient/request', {
+    const res = await fetch('http://localhost:3000/api/recipient/request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ bloodType, location, date: requestDate })
+      body: JSON.stringify({ bloodType, city, location, date: requestDate })
     });
 
     const data = await res.json();
@@ -69,7 +70,7 @@ function showAlert(message, type = 'success') {
 // 📜 Load Recipient Request History
 async function loadHistory() {
   try {
-    const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/recipient/my-requests', {
+    const res = await fetch('http://localhost:3000/api/recipient/my-requests', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -132,7 +133,7 @@ function logout() {
 loadHistory();
 async function loadApprovedRequests() {
   try {
-    const res = await fetch("https://blood-bank-system-dtld.onrender.com/api/recipient/approved-requests", {
+    const res = await fetch("http://localhost:3000/api/recipient/approved-requests", {
       headers: { Authorization: `Bearer ${token}` }
     });
 

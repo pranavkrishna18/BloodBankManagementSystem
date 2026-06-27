@@ -26,46 +26,150 @@
   <div class="container">
     <h2>🛠️ Admin Dashboard</h2>
 
-    <!-- 📩 Pending Requests -->
-    <h3>Pending Blood Requests</h3>
+    <!-- � Statistics Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
+      <div class="glass-card" style="text-align: center;">
+        <h4 id="pendingRequestsCard" style="color: #e74c3c; font-size: 2em; margin: 0;">--</h4>
+        <p style="color: var(--text-muted); margin: 8px 0 0 0;">Pending Requests</p>
+      </div>
+      <div class="glass-card" style="text-align: center;">
+        <h4 id="totalUnitsCard" style="color: #27ae60; font-size: 2em; margin: 0;">--</h4>
+        <p style="color: var(--text-muted); margin: 8px 0 0 0;">Total Blood Units</p>
+      </div>
+      <div class="glass-card" style="text-align: center;">
+        <h4 id="expiringCard" style="color: #f39c12; font-size: 2em; margin: 0;">--</h4>
+        <p style="color: var(--text-muted); margin: 8px 0 0 0;">Expiring Soon (7d)</p>
+      </div>
+      <div class="glass-card" style="text-align: center;">
+        <h4 style="color: #3498db; font-size: 2em; margin: 0;">10</h4>
+        <p style="color: var(--text-muted); margin: 8px 0 0 0;">Cities Active</p>
+      </div>
+    </div>
 
-    <!-- 🔍 Filter and Count -->
-    <div id="filterSection">
-      <label for="filterSelect"><strong>Filter by Blood Type:</strong></label>
-      <select id="filterSelect" style="margin: 0 10px; padding: 5px; border-radius: 5px;">
-        <option value="">All</option>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-      </select>
-      <p id="totalRequestsCount" style="margin-top: 10px; color: #555;"></p>
+    <!-- 📩 Pending Requests -->
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-bottom: 20px;">📩 Blood Requests</h3>
+
+    <!-- 🔍 Filter Section -->
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <div>
+          <label for="filterSelect" style="display: block; margin-bottom: 8px; font-weight: 600;"><strong>Blood Type:</strong></label>
+          <select id="filterSelect" style="width: 100%;">
+            <option value="">All Blood Types</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
+        <div>
+          <label for="adminCitySelect" style="display: block; margin-bottom: 8px; font-weight: 600;"><strong>City:</strong></label>
+          <select id="adminCitySelect" style="width: 100%;">
+            <option value="">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Pune">Pune</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Vijayawada">Vijayawada</option>
+          </select>
+        </div>
+      </div>
+      <p id="totalRequestsCount" style="margin-top: 15px; color: #bdc3c7;"></p>
     </div>
 
     <ul id="pendingRequests" class="history-list"></ul>
 
-    <!-- 📊 Inventory Chart -->
-    <h3>🩸 Blood Inventory Overview</h3>
-    <canvas id="inventoryChart" height="250"></canvas>
-    <p id="lastUpdatedNote" style="font-size: 14px; color: #777; margin-top: 10px;"></p>
+    <!-- � Pending Donations Section -->
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-top: 50px; margin-bottom: 20px;">💉 Pending Donor Donations</h3>
+
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <p id="totalDonationsCount" style="margin-bottom: 15px; color: #bdc3c7;"></p>
+      <ul id="pendingDonations" class="history-list"></ul>
+    </div>
+
+    <!-- �📊 Inventory Section -->
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-top: 50px; margin-bottom: 20px;">📦 Blood Inventory Overview</h3>
+    
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <label for="adminInventoryCitySelect" style="display: block; margin-bottom: 12px; font-weight: 600;">Filter by City:</label>
+      <select id="adminInventoryCitySelect" style="width: 100%; max-width: 300px;">
+        <option value="">All Cities</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Pune">Pune</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Vijayawada">Vijayawada</option>
+      </select>
+    </div>
+
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div class="chart-container">
+        <canvas id="inventoryChart"></canvas>
+      </div>
+      <p id="lastUpdatedNote" style="font-size: 14px; color: #bdc3c7; margin-top: 10px; text-align: center;"></p>
+    </div>
+
+    <!-- City-wise Inventory Table -->
+    <div class="glass-card" style="margin-bottom: 30px; overflow-x: auto;">
+      <h4 style="margin-top: 0; margin-bottom: 15px;">🏥 City-wise Blood Inventory Table</h4>
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-glass);">
+            <th style="text-align: left; padding: 12px; color: #e74c3c; font-weight: 700;">City</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">A+</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">A-</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">B+</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">B-</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">O+</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">O-</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">AB+</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">AB-</th>
+            <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="adminInventoryTableBody">
+          <tr><td colspan="10" style="text-align: center; padding: 20px; color: var(--text-muted);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- 📈 Weekly Donation Trends -->
-    <h3>📈 Weekly Donation Trends</h3>
-    <canvas id="weeklyDonationsChart" height="220"></canvas>
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-top: 50px; margin-bottom: 20px;">📈 Weekly Donation Trends</h3>
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div class="chart-container">
+        <canvas id="weeklyDonationsChart"></canvas>
+      </div>
+    </div>
 
     <!-- 💉 Most Requested Blood Groups -->
-    <h3>💉 Most Requested Blood Groups</h3>
-    <canvas id="topBloodChart" height="220"></canvas>
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-top: 50px; margin-bottom: 20px;">💉 Most Requested Blood Groups</h3>
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div class="chart-container">
+        <canvas id="topBloodChart"></canvas>
+      </div>
+    </div>
 
     <!-- 📍 Location-wise Donor/Recipient Stats -->
-    <h3>📍 Number of Donor/Recipient Stats</h3>
-    <canvas id="locationChart" height="220"></canvas>
-
-  </div>
+    <h3 style="color: #e74c3c; font-size: 1.8em; margin-top: 50px; margin-bottom: 20px;">Total Users</h3>
+    <div class="glass-card" style="margin-bottom: 30px;">
+      <div class="chart-container">
+        <canvas id="locationChart"></canvas>
+      </div>
+    </div>
 
   <!-- 👣 Footer -->
   <footer class="footer">

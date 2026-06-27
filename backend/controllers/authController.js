@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, city } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    user = new User({ name, email, password: hashedPassword, role });
+    user = new User({ name, email, password: hashedPassword, role, city });
     await user.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
       expiresIn: '1d'
     });
 
-    res.status(200).json({ token, user: { name: user.name, email: user.email, role: user.role } });
+    res.status(200).json({ token, user: { name: user.name, email: user.email, role: user.role, city: user.city } });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

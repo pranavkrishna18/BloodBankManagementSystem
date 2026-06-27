@@ -59,6 +59,29 @@ const donationSchema = new mongoose.Schema(
       isHealthy: {
         type: Boolean
       }
+    },
+
+    // 🏙️ City where donation is being made
+    city: {
+      type: String,
+      required: true,
+      enum: [
+        'Mumbai', 'Delhi', 'Bangalore', 'Chennai',
+        'Hyderabad', 'Kolkata', 'Pune', 'Ahmedabad',
+        'Jaipur', 'Vijayawada'
+      ]
+    },
+
+    // ⏰ Expiry date for blood unit (whole blood expires in 42 days)
+    expiryDate: {
+      type: Date,
+      default: () => new Date(Date.now() + 42 * 24 * 60 * 60 * 1000) // 42 days from donation
+    },
+
+    // 🚩 Flag to mark expired blood units
+    isExpired: {
+      type: Boolean,
+      default: false
     }
   },
   {

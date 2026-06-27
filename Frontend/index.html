@@ -3,76 +3,302 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome | Blood Bank</title>
+  <title>Blood Bank Management System | Save Lives</title>
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/index.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 </head>
 <body>
-
-  <!-- 🌟 Hero Section -->
-  <section class="hero">
-    <h1>Donate Blood, Save Lives</h1>
-    <p>Your blood can bring someone back to life. Be a hero today.</p>
-    <div class="btn-group">
-      <a href="register.html" class="btn-primary">📝 Register Now</a>
-      <a href="login.html" class="btn-primary alt">🔐 Login</a>
+  <!-- 🌟 Hero Section with Gradient -->
+  <section class="hero" style="background: linear-gradient(135deg, #8B0000 0%, #c0392b 50%, #e74c3c 100%); 
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; 
+    position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: -100px; width: 400px; height: 400px; 
+      background: rgba(255,255,255,0.05); border-radius: 50%; animation: float 6s ease-in-out infinite;"></div>
+    <div style="position: absolute; bottom: -50px; left: -100px; width: 300px; height: 300px; 
+      background: rgba(255,255,255,0.03); border-radius: 50%; animation: float 8s ease-in-out infinite;"></div>
+    
+    <div style="text-align: center; color: white; z-index: 10; max-width: 700px; padding: 20px;">
+      <h1 style="font-size: 3.5em; margin-bottom: 15px; font-weight: 700; 
+        text-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: slideUp 0.8s ease-out;">
+        🩸 Donate Blood, Save Lives
+      </h1>
+      <p style="font-size: 1.3em; margin-bottom: 40px; opacity: 0.95; 
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2); font-weight: 300;">
+        Your blood can bring someone back to life. Be a hero today and join thousands making a difference.
+      </p>
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <a href="register.html" class="btn-primary" style="font-size: 1.1em; padding: 14px 32px;">
+          📝 Become a Donor
+        </a>
+        <a href="login.html" class="btn-secondary" style="font-size: 1.1em; padding: 14px 32px; 
+          background: rgba(255,255,255,0.2); border: 2px solid white;">
+          🔐 Login
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- 📊 Blood Inventory Section -->
-  <section class="inventory-section">
-    <div class="inventory-header">
-      <h2>📦 Available Blood Units</h2>
-      <button onclick="loadInventory()" class="refresh-btn">🔄 Refresh</button>
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(20px); }
+    }
+  </style>
+
+  <!-- 📊 Statistics Bar -->
+  <section style="background: rgba(255,255,255,0.04); padding: 40px 20px; 
+    border-bottom: 1px solid rgba(255,255,255,0.1);">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
+        <div>
+          <h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 5px;">10</h3>
+          <p style="color: #bdc3c7;">Cities Covered</p>
+        </div>
+        <div>
+          <h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 5px;">8</h3>
+          <p style="color: #bdc3c7;">Blood Types</p>
+        </div>
+        <div>
+          <h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 5px;">24/7</h3>
+          <p style="color: #bdc3c7;">Service Available</p>
+        </div>
+        <div>
+          <h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 5px;">1000+</h3>
+          <p style="color: #bdc3c7;">Lives Saved</p>
+        </div>
+      </div>
     </div>
-    <canvas id="bloodChart" height="300"></canvas>
-    <p class="note" id="inventoryNote">Loading inventory...</p>
+  </section>
+
+  <!-- 🌍 City-wise Blood Inventory Section -->
+  <section style="padding: 60px 20px; background: var(--bg-dark);">
+    <div class="container">
+      <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 40px; color: #e74c3c; font-weight: 700;">
+        🏥 Blood Inventory By City
+      </h2>
+
+      <!-- City Selector -->
+      <div class="city-selector-wrap" style="background: var(--bg-card); backdrop-filter: blur(12px); 
+        border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 20px; 
+        margin-bottom: 40px; text-align: center;">
+        <label for="citySelect" style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 1.1em;">
+          📍 Select City:
+        </label>
+        <select id="citySelect" onchange="loadInventory()" style="max-width: 300px; margin: 0 auto; display: block;">
+          <option value="">-- All Cities --</option>
+          <option value="Mumbai">🏙️ Mumbai</option>
+          <option value="Delhi">🏙️ Delhi</option>
+          <option value="Bangalore">🏙️ Bangalore</option>
+          <option value="Chennai">🏙️ Chennai</option>
+          <option value="Hyderabad">🏙️ Hyderabad</option>
+          <option value="Kolkata">🏙️ Kolkata</option>
+          <option value="Pune">🏙️ Pune</option>
+          <option value="Ahmedabad">🏙️ Ahmedabad</option>
+          <option value="Jaipur">🏙️ Jaipur</option>
+          <option value="Vijayawada">🏙️ Vijayawada</option>
+        </select>
+      </div>
+
+      <!-- Inventory Chart -->
+      <div class="glass-card" style="margin-bottom: 30px;">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">📊 Inventory Overview</h3>
+        <div class="chart-container">
+          <canvas id="bloodChart"></canvas>
+        </div>
+        <p class="note" id="inventoryNote" style="text-align: center; margin-top: 20px; color: var(--text-muted); font-size: 0.95em;">
+          Loading inventory...
+        </p>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="glass-card">
+        <h3 style="margin-top: 0; margin-bottom: 20px;">📋 Blood Units by Type</h3>
+        <div id="inventoryTableContainer" style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-glass);">
+                <th style="text-align: left; padding: 12px; color: #e74c3c; font-weight: 700;">City</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">A+</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">A-</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">B+</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">B-</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">O+</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">O-</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">AB+</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">AB-</th>
+                <th style="text-align: center; padding: 12px; color: #e74c3c; font-weight: 700;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <tr><td colspan="10" style="text-align: center; padding: 20px; color: var(--text-muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ❓ How It Works -->
+  <section style="padding: 60px 20px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.1);">
+    <div class="container">
+      <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 50px; color: #e74c3c; font-weight: 700;">
+        ❓ How It Works
+      </h2>
+      <div class="grid">
+        <div class="glass-card" style="text-align: center;">
+          <div style="font-size: 3em; margin-bottom: 15px;">1️⃣</div>
+          <h3 style="color: #e74c3c;">Register</h3>
+          <p style="color: var(--text-muted);">Create your account and tell us about your blood type and location.</p>
+        </div>
+        <div class="glass-card" style="text-align: center;">
+          <div style="font-size: 3em; margin-bottom: 15px;">2️⃣</div>
+          <h3 style="color: #e74c3c;">Schedule Donation</h3>
+          <p style="color: var(--text-muted);">Pick a convenient time and location to donate blood safely.</p>
+        </div>
+        <div class="glass-card" style="text-align: center;">
+          <div style="font-size: 3em; margin-bottom: 15px;">3️⃣</div>
+          <h3 style="color: #e74c3c;">Save Lives</h3>
+          <p style="color: var(--text-muted);">Your blood is matched with patients who need it most urgently.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- 🚨 Emergency Section -->
-  <section class="emergency">
-    <h2>🚨 Emergency Contact</h2>
-    <p>📞 +91-9876543210</p>
-    <p>📍 Central Blood Bank, Vijayawada</p>
-    <p>🕒 Open 24/7 for emergencies</p>
-  </section>
-
-  <!-- ❤️ About Section -->
-  <section class="about">
-    <h2>❤️ Our Mission</h2>
-    <p>We aim to ensure no patient dies due to the unavailability of blood. Join us in making a difference by donating blood and helping those in need.</p>
+  <section style="padding: 60px 20px; background: var(--bg-dark);">
+    <div class="container">
+      <div class="glass-card" style="text-align: center; border: 2px solid #e74c3c;">
+        <h2 style="color: #e74c3c; margin-top: 0;">🚨 Emergency? Need Blood?</h2>
+        <p style="font-size: 1.2em; margin-bottom: 25px; color: var(--text-light);">
+          We're here 24/7 to help. Contact us immediately.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+          <div>
+            <p style="margin: 0; color: var(--text-muted); font-size: 0.9em;">📞 Emergency Hotline</p>
+            <h3 style="margin: 8px 0 0 0; color: #e74c3c; font-size: 1.8em;">+91-9876543210</h3>
+          </div>
+          <hr style="width: 60%; opacity: 0.3;">
+          <div>
+            <p style="margin: 0; color: var(--text-muted); font-size: 0.9em;">📍 Central Blood Bank</p>
+            <p style="margin: 8px 0; color: var(--text-light);">Vijayawada, India</p>
+          </div>
+          <div style="padding: 10px 20px; background: rgba(39,174,96,0.2); border-radius: 50px; margin-top: 10px;">
+            <span style="color: #27ae60; font-weight: 700;">✅ Open 24/7 for Emergencies</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- 👣 Footer -->
   <footer class="footer">
-    <p>&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
+    <div class="container">
+      <p style="margin-bottom: 20px;">&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; color: var(--text-muted); font-size: 0.9em;">
+        <a href="#" style="color: #e74c3c; text-decoration: none;">Privacy Policy</a>
+        <span>•</span>
+        <a href="#" style="color: #e74c3c; text-decoration: none;">Terms of Service</a>
+        <span>•</span>
+        <a href="#" style="color: #e74c3c; text-decoration: none;">Contact Us</a>
+      </div>
+    </div>
   </footer>
 
-  <!-- 📜 Inventory Script -->
+  <!-- 📜 Helper Functions & Inventory Script -->
   <script>
+    // Helper function to generate expiry badge
+    function getExpiryBadge(earliestExpiry) {
+      if (!earliestExpiry) return '<span class="badge badge-green">✅ Fresh</span>';
+      const daysLeft = Math.ceil((new Date(earliestExpiry) - new Date()) / (1000 * 60 * 60 * 24));
+      if (daysLeft <= 0) return '<span class="badge badge-red">⛔ Expired</span>';
+      if (daysLeft <= 3) return `<span class="badge badge-red">🔴 Expires in ${daysLeft}d</span>`;
+      if (daysLeft <= 7) return `<span class="badge badge-yellow">⚠️ ${daysLeft} days</span>`;
+      return `<span class="badge badge-green">✅ Fresh</span>`;
+    }
+
+    // Load inventory from city selector
     async function loadInventory() {
       try {
-        const res = await fetch("https://blood-bank-system-dtld.onrender.com/api/admin/public-inventory");
+        document.getElementById("inventoryNote").innerHTML = "⏳ Loading inventory...";
+        
+        let city = document.getElementById('citySelect').value;
+        const url = city
+          ? `http://localhost:3000/api/admin/public-inventory?city=${encodeURIComponent(city)}`
+          : `http://localhost:3000/api/admin/public-inventory`;
+        console.log('📡 API URL:', url);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
         const data = await res.json();
 
+        console.log('📊 API Response:', data);
+
+        // Build data grid for chart
         const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-        const inventoryMap = Object.fromEntries(bloodGroups.map(bg => [bg, 0]));
+        const cities = [];
+        const inventoryMap = {};
+        const expiryMap = {};
 
         data.forEach(item => {
-          inventoryMap[item.bloodType] = item.units;
+          if (!cities.includes(item.city)) cities.push(item.city);
+          const key = `${item.city}${item.bloodType}`;
+          inventoryMap[key] = item.units;
+          expiryMap[key] = item.earliestExpiry;
         });
 
-        const ctx = document.getElementById("bloodChart").getContext("2d");
-        if (window.chartInstance) window.chartInstance.destroy(); // prevent overlay
+        console.log('🏙️ Cities in response:', cities);
+        console.log('🗺️ Inventory map:', inventoryMap);
+        
+        let chartData;
+        if (city) {
+          // Single city selected - show that city's inventory
+          chartData = bloodGroups.map(bg => {
+            const key = `${city}${bg}`;
+            return inventoryMap[key] || 0;
+          });
+        } else {
+          // All cities - sum across all cities for each blood type
+          chartData = bloodGroups.map(bg => {
+            let total = 0;
+            cities.forEach(c => {
+              const key = `${c}${bg}`;
+              total += inventoryMap[key] || 0;
+            });
+            return total;
+          });
+        }
 
-        const total = Object.values(inventoryMap).reduce((sum, v) => sum + v, 0);
-        const lowStock = bloodGroups.filter(bg => inventoryMap[bg] <= 5);
+        const total = chartData.reduce((sum, v) => sum + v, 0);
+        const lowStock = bloodGroups.filter((bg, idx) => chartData[idx] <= 5);
 
-        document.getElementById("inventoryNote").textContent =
+        document.getElementById("inventoryNote").innerHTML =
           `🩸 Total Units Available: ${total} ${
             lowStock.length ? ` | ⚠️ Low Stock: ${lowStock.join(", ")}` : ""
           }`;
+
+        // Get canvas context for chart
+        const canvasElement = document.getElementById("bloodChart");
+        if (!canvasElement) {
+          document.getElementById("inventoryNote").innerHTML = "❌ Chart element not found";
+          return;
+        }
+
+        // Destroy old chart instance before creating new one
+        if (window.chartInstance) {
+          window.chartInstance.destroy();
+        }
+
+        const ctx = canvasElement.getContext("2d");
 
         window.chartInstance = new Chart(ctx, {
           type: "bar",
@@ -80,61 +306,91 @@
             labels: bloodGroups,
             datasets: [{
               label: "Available Units",
-              data: bloodGroups.map(bg => inventoryMap[bg]),
-              backgroundColor: bloodGroups.map(bg =>
-                inventoryMap[bg] <= 5 ? "#e63946" : "#219ebc"
+              data: chartData,
+              backgroundColor: chartData.map(val =>
+                val === 0 ? "#808080" : val <= 5 ? "#e63946" : "#219ebc"
               ),
-              borderRadius: 6
+              borderRadius: 6,
+              borderSkipped: false
             }]
           },
           options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               datalabels: {
-                color: '#111',
+                color: '#fff',
                 anchor: 'end',
-                align: 'start',
-                font: {
-                  weight: 'bold',
-                  size: 14
-                },
-                formatter: value => `${value} 🔻`
-              },
-              title: {
-                display: true,
-                text: "Current Blood Inventory",
-                font: { size: 20 }
+                align: 'end',
+                font: { weight: 'bold', size: 12 },
+                formatter: value => value > 0 ? value : '—'
               },
               legend: { display: false }
             },
             scales: {
               y: {
                 beginAtZero: true,
-                ticks: {
-                  font: { size: 14 }
-                },
-                title: {
-                  display: true,
-                  text: "Units",
-                  font: { size: 16 }
-                }
+                ticks: { color: 'var(--text-muted)' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
               },
               x: {
-                ticks: {
-                  font: { size: 14 }
-                }
+                ticks: { color: 'var(--text-muted)' },
+                grid: { display: false }
               }
             }
           },
           plugins: [ChartDataLabels]
         });
+
+        // Update Table
+        const tableBody = document.getElementById('inventoryTableBody');
+        let citiesToDisplay = cities;
+        
+        if (city) {
+          // Only show selected city
+          citiesToDisplay = [city];
+        }
+        
+        if (citiesToDisplay.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 20px; color: var(--text-muted);">No data available</td></tr>';
+        } else {
+          tableBody.innerHTML = citiesToDisplay.map(c => {
+            let rowClass = '';
+            let statusBadge = '❌ Low Stock';
+            let typeCount = 0;
+            for (let bg of bloodGroups) {
+              const key = `${c}${bg}`;
+              if (inventoryMap[key] > 0) typeCount++;
+            }
+            if (typeCount >= 5) {
+              rowClass = 'style="background: rgba(39,174,96,0.1);"';
+              statusBadge = '✅ Good Stock';
+            } else if (typeCount > 0) {
+              rowClass = 'style="background: rgba(243,156,18,0.1);"';
+              statusBadge = '⚠️ Moderate';
+            }
+            return `<tr ${rowClass}>
+              <td style="padding: 12px; font-weight: 600;">${c}</td>
+              ${bloodGroups.map(bg => {
+                const key = `${c}${bg}`;
+                const units = inventoryMap[key] || 0;
+                const color = units === 0 ? 'color: #999;' : units <= 5 ? 'color: #e74c3c;' : 'color: #27ae60;';
+                return `<td style="text-align: center; padding: 12px; ${color} font-weight: 600;">${units}</td>`;
+              }).join('')}
+              <td style="text-align: center; padding: 12px;">${statusBadge}</td>
+            </tr>`;
+          }).join('');
+        }
       } catch (err) {
-        document.getElementById("inventoryNote").textContent =
-          "❌ Failed to load inventory.";
+        const errorMsg = err.name === 'AbortError' 
+          ? "❌ Request timeout - Backend might be offline" 
+          : `❌ Error: ${err.message}`;
+        document.getElementById("inventoryNote").innerHTML = errorMsg;
         console.error("Inventory Load Error:", err);
       }
     }
 
+    // Load on page load
     loadInventory();
   </script>
 </body>

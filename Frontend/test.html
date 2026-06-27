@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <style>
+        body { 
+            background: #1a1a2e; 
+            color: #fff; 
+            font-family: Arial; 
+            padding: 20px;
+        }
+        pre { 
+            background: #2a2a4e; 
+            padding: 15px; 
+            overflow-x: auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 API Test</h1>
+    <button onclick="testAPI()">Test API</button>
+    <pre id="result">Click button to test API...</pre>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.textContent = 'Testing API...';
+            
+            try {
+                console.log('📡 Calling: http://localhost:3000/api/admin/public-inventory');
+                const res = await fetch('http://localhost:3000/api/admin/public-inventory');
+                
+                console.log('Response status:', res.status);
+                
+                if (!res.ok) {
+                    result.textContent = `❌ Error: ${res.status} ${res.statusText}`;
+                    return;
+                }
+                
+                const data = await res.json();
+                result.textContent = `✅ Success!\n\nTotal records: ${data.length}\n\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\n(showing first 5)`;
+            } catch (err) {
+                result.textContent = `❌ Error: ${err.message}\n\nStack:\n${err.stack}`;
+                console.error('API Error:', err);
+            }
+        }
+        
+        // Auto test on load
+        window.addEventListener('DOMContentLoaded', testAPI);
+    </script>
+</body>
+</html>

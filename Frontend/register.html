@@ -3,26 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register | Blood Bank</title>
+  <title>Register | Blood Bank Management System</title>
   <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
   <div class="auth-container">
-    <div class="auth-card">
-      <h2>📝 Register for Blood Bank</h2>
-      <form id="registerForm">
-        <input type="text" id="name" placeholder="Full Name" required />
-        <input type="email" id="email" placeholder="Email Address" required />
-        <input type="password" id="password" placeholder="Create Password" required />
-        <select id="role" required>
-          <option value="">Select Role</option>
-          <option value="donor">Donor</option>
-          <option value="recipient">Recipient</option>
-        </select>
-        <button type="submit" class="btn">🩸 Register</button>
-        <div id="registerAlert" class="alert"></div>
-        <p class="link-text">Already have an account? <a href="login.html">Login here</a></p>
-      </form>
+    <!-- Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <h1>🩸 Join Us Today</h1>
+        <p>Create your account and become a lifesaver. Register as a donor or recipient and make a difference.</p>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="auth-form-section">
+      <div class="auth-card">
+        <h2>📝 Register</h2>
+        <form id="registerForm">
+          <div id="registerAlert" class="alert" style="display: none;"></div>
+
+          <div class="form-group">
+            <label for="name">👤 Full Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              placeholder="John Doe" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">📧 Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="your@email.com" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">🔒 Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="Create a strong password" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="role">🩸 I am a</label>
+            <select id="role" required>
+              <option value="">-- Select Role --</option>
+              <option value="donor">Donor (I want to donate blood)</option>
+              <option value="recipient">Recipient (I need blood)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="city">📍 City</label>
+            <select id="city" required>
+              <option value="">-- Select Your City --</option>
+              <option value="Mumbai">🏙️ Mumbai</option>
+              <option value="Delhi">🏙️ Delhi</option>
+              <option value="Bangalore">🏙️ Bangalore</option>
+              <option value="Chennai">🏙️ Chennai</option>
+              <option value="Hyderabad">🏙️ Hyderabad</option>
+              <option value="Kolkata">🏙️ Kolkata</option>
+              <option value="Pune">🏙️ Pune</option>
+              <option value="Ahmedabad">🏙️ Ahmedabad</option>
+              <option value="Jaipur">🏙️ Jaipur</option>
+              <option value="Vijayawada">🏙️ Vijayawada</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn">🩸 Create Account</button>
+
+          <p class="link-text">
+            Already have an account? <a href="login.html">Login Here</a>
+          </p>
+        </form>
+      </div>
     </div>
   </div>
 

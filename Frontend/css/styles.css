@@ -1,22 +1,45 @@
+/* 🩸 Blood Bank Management System — Shared Design System */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+:root {
+  --primary: #c0392b;
+  --primary-dark: #8B0000;
+  --primary-light: #e74c3c;
+  --accent: #f39c12;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --bg-dark: #1a1a2e;
+  --bg-card: rgba(255,255,255,0.08);
+  --text-light: #ecf0f1;
+  --text-muted: #bdc3c7;
+  --border-glass: rgba(255,255,255,0.15);
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* 🌐 General Styles */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fff8f8;
-  color: #333;
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  line-height: 1.6;
+  overflow-x: hidden;
   margin: 0;
-  padding: 0 30px;
+  padding: 0;
 }
 
-.container {
-  max-width: 700px;
-  margin: 80px auto 40px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-/* 🔝 Navbar */
+/* 🔝 Navbar (keep existing for backward compat) */
 .navbar {
   position: fixed;
   top: 0;
@@ -65,70 +88,199 @@ body {
   border: 2px solid #a80000;
 }
 
-/* 📝 Card / Form */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+/* 🎨 Glassmorphism Card */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  transition: var(--transition);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+/* 📝 Card / Form (backward compat) */
 .card {
-  background: #ffeaea;
+  background: var(--bg-card);
   padding: 20px 25px;
   border-radius: 10px;
   margin-bottom: 25px;
-  box-shadow: 0 2px 10px rgba(209, 0, 0, 0.1);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-glass);
 }
 .card h3 {
   margin-top: 0;
-  color: #c30000;
+  color: var(--primary-light);
 }
 
-/* 🖊️ Inputs */
-input, select {
-  width: 100%;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: 0.2s;
-}
-input:focus, select:focus {
-  border-color: #d10000;
-  outline: none;
+/* 🏷️ Badge Styles */
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: var(--transition);
 }
 
-/* 🔘 Buttons */
+.badge-red {
+  background: rgba(231,76,60,0.2);
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.badge-green {
+  background: rgba(39,174,96,0.2);
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.badge-yellow {
+  background: rgba(243,156,18,0.2);
+  color: #f39c12;
+  border: 1px solid #f39c12;
+}
+
+/* ⏱️ Expiry Indicator */
+.expiry-soon {
+  animation: pulse 1.5s infinite;
+  color: #f39c12;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 🎯 Button Styles */
+.btn-primary {
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(192, 57, 43, 0.4);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--border-glass);
+  color: var(--text-light);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  font-size: 14px;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* 🔘 Buttons (backward compat) */
 .btn {
   width: 100%;
   padding: 12px;
-  background-color: #d10000;
+  background-color: var(--primary);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: bold;
   font-size: 15px;
   cursor: pointer;
   transition: background 0.3s;
 }
 .btn:hover {
-  background-color: #a80000;
+  background-color: var(--primary-dark);
 }
 
 /* ✅ Action Buttons (Approve / Reject) */
 button.approve {
-  background: green;
+  background: var(--success);
   color: white;
   padding: 6px 12px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
+  transition: var(--transition);
 }
 button.reject {
-  background: crimson;
+  background: var(--danger);
   color: white;
   padding: 6px 12px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
+  transition: var(--transition);
 }
-button.approve:hover { background: darkgreen; }
-button.reject:hover { background: darkred; }
+button.approve:hover { background: #229954; }
+button.reject:hover { background: #c0392b; }
+
+/* 🖊️ Inputs */
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-light);
+  font-size: 15px;
+  font-family: inherit;
+  transition: var(--transition);
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-light);
+  outline: none;
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 16px rgba(192, 57, 43, 0.2);
+}
+
+select {
+  cursor: pointer;
+}
+
+option {
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
 
 /* 🚨 Alerts */
 .alert {
@@ -139,14 +291,14 @@ button.reject:hover { background: darkred; }
   font-size: 14px;
 }
 .alert.success {
-  background: #e8f9e9;
-  color: green;
-  border-left: 4px solid green;
+  background: rgba(39,174,96,0.2);
+  color: #27ae60;
+  border-left: 4px solid #27ae60;
 }
 .alert.error {
-  background: #ffecec;
-  color: red;
-  border-left: 4px solid red;
+  background: rgba(231,76,60,0.2);
+  color: #e74c3c;
+  border-left: 4px solid #e74c3c;
 }
 
 /* 📜 History List */
@@ -155,22 +307,43 @@ button.reject:hover { background: darkred; }
   padding: 0;
 }
 .history-list li {
-  background: #fdfdfd;
+  background: rgba(255,255,255,0.05);
   padding: 14px;
   margin-bottom: 12px;
-  border-left: 5px solid #d10000;
+  border-left: 5px solid var(--primary);
   border-radius: 8px;
   font-size: 15px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* 📊 Chart Container */
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin: 20px 0;
+}
+
+/* 📱 Responsive Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 👣 Footer */
 .footer {
   text-align: center;
-  color: #777;
+  color: var(--text-muted);
   font-size: 14px;
   padding: 25px 0 15px 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-glass);
   margin-top: 60px;
 }
 
@@ -181,7 +354,7 @@ button.reject:hover { background: darkred; }
   left: 0;
   width: 100%;
   height: 100%;
-  background: #fffafc;
+  background: var(--bg-dark);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -190,12 +363,57 @@ button.reject:hover { background: darkred; }
 .spinner {
   width: 60px;
   height: 60px;
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #d10000;
+  border: 6px solid rgba(255,255,255,0.1);
+  border-top: 6px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* 🎭 Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* 💫 Slide-up Animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+/* 📌 Text Utils */
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
 
 /* 📱 Responsive Navbar for Mobile */
 @media (max-width: 700px) {

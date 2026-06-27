@@ -3,10 +3,10 @@ const Donation = require('../models/Donation');
 // ✅ Record New Donation
 exports.donateBlood = async (req, res) => {
   try {
-    const { bloodType, location, date } = req.body;
+    const { bloodType, location, date, city } = req.body;
 
-    if (!bloodType || !location || !date) {
-      return res.status(400).json({ message: 'Blood type, location, and date are required' });
+    if (!bloodType || !location || !date || !city) {
+      return res.status(400).json({ message: 'Blood type, location, date, and city are required' });
     }
 
     const donationDate = new Date(date);
@@ -24,7 +24,9 @@ exports.donateBlood = async (req, res) => {
       bloodType,
       location,
       date: donationDate,
-      status: 'Completed' // 🆕 Optional: mark immediately as completed
+      city,  // ✅ Added city field
+      status: 'Scheduled', // Pending admin approval
+      adminApproved: false // Not approved yet
     });
 
     await donation.save();
@@ -54,10 +56,11 @@ exports.getEligibilityCountdown = async (req, res) => {
   try {
     const donorId = req.user._id;
 
-    // 🩸 Find last completed donation
+    // 🩸 Find last completed AND approved donation
     const lastDonation = await Donation.findOne({
       donor: donorId,
-      status: 'Completed'
+      status: 'Completed',
+      adminApproved: true
     }).sort({ date: -1 });
 
     if (!lastDonation) {

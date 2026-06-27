@@ -1,4 +1,4 @@
-const API_BASE = 'https://blood-bank-system-dtld.onrender.com/api/auth';
+const API_BASE = 'http://localhost:3000/api/auth';
 
 // Register
 const registerForm = document.getElementById('registerForm');

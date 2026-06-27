@@ -2,230 +2,472 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Donor Dashboard | Blood Bank</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/styles.css">
   <style>
-    .eligibility-card {
-      padding: 15px;
-      border-radius: 8px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar h1 {
+      font-size: 1.8em;
+      color: #ff6b6b;
+    }
+
+    .navbar button {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .navbar button:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      font-size: 1.4em;
       margin-bottom: 20px;
-      font-weight: bold;
-    }
-    .eligibility-card.success {
-      background-color: #e1f5e9;
-      color: #2e7d32;
-      border-left: 5px solid #2e7d32;
-    }
-    .eligibility-card.warning {
-      background-color: #fff4e5;
-      color: #e65100;
-      border-left: 5px solid #e65100;
-    }
-    .navbar .nav-links {
+      color: #ff6b6b;
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 10px;
     }
-    .logout-btn {
-      padding: 8px 14px;
-      background: #fff;
-      color: #d10000;
-      border: 2px solid #d10000;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
+
+    .form-group {
+      margin-bottom: 18px;
     }
-    .logout-btn:hover {
-      background: #d10000;
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #b0b0b0;
+      font-size: 0.95em;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+    }
+
+    .form-group input::placeholder {
+      color: #888;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
       color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 20px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .alert.success {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid rgba(46, 204, 113, 0.5);
+      color: #2ecc71;
+    }
+
+    .alert.error {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      color: #e74c3c;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .table-section {
+      grid-column: 1 / -1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th {
+      background: rgba(255, 107, 107, 0.15);
+      padding: 15px;
+      text-align: left;
+      font-weight: 700;
+      color: #ff6b6b;
+      border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    table td {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+
+    .status-badge.pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    .status-badge.completed {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4caf50;
+    }
+
+    .eligibility-card {
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    .eligibility-card.eligible {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid rgba(46, 204, 113, 0.5);
+      color: #2ecc71;
+    }
+
+    .eligibility-card.not-eligible {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      color: #e74c3c;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- 🔄 Loader -->
-  <div class="loader-container" id="loader">
-    <div class="spinner"></div>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>🩸 Donor Dashboard</h1>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- 🔝 Navbar -->
-  <nav class="navbar">
-    <div class="nav-brand">🩸 Blood Bank</div>
-    <div class="nav-links">
-      <span>Hi, <strong id="usernameDisplay"></strong>!</span>
-      <button onclick="logout()" class="logout-btn">Logout</button>
-    </div>
-  </nav>
-
-  <!-- 📋 Main Dashboard -->
+  <!-- Main Container -->
   <div class="container">
-    <h2>🩸 Donor Dashboard</h2>
-
-    <!-- ⏳ Eligibility Info -->
-    <div id="eligibilityInfo" class="eligibility-card">Loading eligibility...</div>
-
-    <!-- 📝 Donation Form -->
-    <div class="card">
-      <h3>📝 Schedule a Donation</h3>
-      <form id="donationForm" class="form-grid">
-        <div class="form-group">
-          <label for="bloodType">Blood Type</label>
-          <input type="text" id="bloodType" placeholder="e.g., A+" required />
-        </div>
-        <div class="form-group">
-          <label for="location">Location</label>
-          <input type="text" id="location" placeholder="City or Hospital" required />
-        </div>
-        <div class="form-group">
-          <label for="donationDate">Donation Date</label>
-          <input type="date" id="donationDate" required />
-        </div>
-        <button type="submit" class="btn">Donate</button>
+    <div class="grid">
+      <!-- Donation Form -->
+      <div class="card">
+        <h2>💉 Schedule Donation</h2>
         <div id="donationAlert" class="alert"></div>
-      </form>
+        <form id="donationForm">
+          <div class="form-group">
+            <label>Blood Type</label>
+            <select id="bloodType" required>
+              <option value="">Select Blood Type</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <select id="city" required>
+              <option value="">Select Your City</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Pune">Pune</option>
+              <option value="Ahmedabad">Ahmedabad</option>
+              <option value="Jaipur">Jaipur</option>
+              <option value="Vijayawada">Vijayawada</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="location" placeholder="Donation Center" required />
+          </div>
+
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="donationDate" required />
+          </div>
+
+          <button type="submit" class="btn-primary">Schedule Donation</button>
+        </form>
+      </div>
+
+      <!-- Eligibility Check -->
+      <div class="card">
+        <h2>✓ Your Eligibility</h2>
+        <div id="eligibilityinfo" class="eligibility-card">Checking eligibility...</div>
+      </div>
     </div>
 
-    <!-- 📜 Donation History -->
-    <div class="card">
-      <h3>📜 Donation History</h3>
-      <ul id="donationHistory" class="history-list"></ul>
+    <!-- Donation History -->
+    <div class="card table-section">
+      <h2>📋 Donation History</h2>
+      <div id="historyAlert" class="alert"></div>
+      <div id="historyContainer">
+        <p style="color: #b0b0b0; text-align: center; padding: 40px;">Loading donation history...</p>
+      </div>
     </div>
   </div>
 
-  <!-- 👣 Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Blood Bank Management System. Built with ❤️ by Pranav.</p>
-  </footer>
-
-  <!-- 📜 JS -->
   <script>
-    window.addEventListener("load", () => {
-      document.getElementById("loader").style.display = "none";
-      const today = new Date().toISOString().split("T")[0];
-      document.getElementById("donationDate").setAttribute("min", today);
-      loadEligibility();
-    });
-
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-    document.getElementById('usernameDisplay').innerText = user?.name || 'Donor';
 
-    if (!token || user?.role !== 'donor') {
-      alert("Unauthorized! Redirecting to login...");
-      window.location.href = 'login.html';
+    window.addEventListener('load', () => {
+      if (!token) {
+        window.location.href = 'login.html';
+      } else {
+        setMinDate();
+        loadDonationHistory();
+        loadEligibility();
+        
+        // 🔄 Auto-refresh donation history every 5 seconds
+        setInterval(() => {
+          loadDonationHistory();
+          loadEligibility();
+        }, 5000);
+      }
+    });
+
+    function setMinDate() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('donationDate').min = today;
     }
 
-    const donationForm = document.getElementById('donationForm');
-    const donationAlert = document.getElementById('donationAlert');
-    const donationHistory = document.getElementById('donationHistory');
-    const eligibilityBox = document.getElementById('eligibilityInfo');
-
-    // ✅ Submit Donation
-    donationForm.addEventListener('submit', async (e) => {
+    // Handle donation form submission
+    document.getElementById('donationForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const bloodType = document.getElementById('bloodType').value.trim();
-      const location = document.getElementById('location').value.trim();
-      const date = document.getElementById('donationDate').value;
+      const bloodType = document.getElementById('bloodType').value;
+      const city = document.getElementById('city').value;
+      const location = document.getElementById('location').value;
+      const donationDate = document.getElementById('donationDate').value;
 
-      if (!bloodType || !location || !date) {
-        showAlert("❗ Please fill in all fields", 'error');
+      if (!bloodType || !city || !location || !donationDate) {
+        showAlert('Please fill in all required fields', 'error');
         return;
       }
 
       try {
-        const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/donate', {
+        const res = await fetch('http://localhost:3000/api/donor/donate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ bloodType, location, date })
+          body: JSON.stringify({ bloodType, city, location, date: donationDate })
         });
 
         const data = await res.json();
         if (res.ok) {
-          showAlert(`✅ ${data.message}`, 'success');
-          donationForm.reset();
-          loadHistory();
-          loadEligibility();
+          showAlert('✓ Donation scheduled successfully!', 'success');
+          document.getElementById('donationForm').reset();
+          
+          // 🔄 Refresh immediately to see the new donation
+          setTimeout(() => {
+            loadDonationHistory();
+            loadEligibility();
+          }, 1000);
         } else {
-          showAlert(`❌ ${data.message || 'Something went wrong'}`, 'error');
+          showAlert(data.message || 'Failed to schedule donation', 'error');
         }
       } catch (err) {
-        showAlert("❌ Server error. Try again later.", 'error');
-        console.error("Donation failed:", err);
+        console.error(err);
+        showAlert('Server error. Please try again.', 'error');
       }
     });
 
     function showAlert(message, type = 'success') {
-      donationAlert.textContent = message;
-      donationAlert.className = `alert ${type}`;
+      const alert = document.getElementById('donationAlert');
+      alert.textContent = message;
+      alert.className = `alert ${type}`;
+      alert.style.display = 'block';
       setTimeout(() => {
-        donationAlert.textContent = '';
-        donationAlert.className = 'alert';
+        alert.style.display = 'none';
+        alert.className = 'alert';
       }, 4000);
     }
 
-    // ✅ Load Donation History (Correct IST)
-    async function loadHistory() {
-      try {
-        const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/history', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-        donationHistory.innerHTML = '';
-
-        if (!Array.isArray(data) || data.length === 0) {
-          donationHistory.innerHTML = '<li>No donations yet.</li>';
-          return;
-        }
-
-        data.forEach(d => {
-          const localDate = new Date(d.date); // Browser auto uses IST
-          const formattedDate = localDate.toLocaleDateString('en-IN');
-          const formattedTime = localDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-
-          const li = document.createElement('li');
-          li.innerHTML = `<strong>${d.bloodType}</strong> at <em>${d.location}</em><br>📅 ${formattedDate} | ⏰ ${formattedTime}`;
-          donationHistory.appendChild(li);
-        });
-
-      } catch (err) {
-        console.error("Error loading history:", err);
-        donationHistory.innerHTML = '<li>Error loading donation history.</li>';
-      }
-    }
-
-    // ✅ Load Eligibility Countdown
-    async function loadEligibility() {
-      try {
-        const res = await fetch('https://blood-bank-system-dtld.onrender.com/api/donor/eligibility', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-
-        const nextDate = new Date(data.nextEligibleDate).toLocaleDateString('en-IN');
-        if (data.eligible) {
-          eligibilityBox.innerHTML = `✅ You are eligible to donate now.`;
-          eligibilityBox.className = 'eligibility-card success';
-        } else {
-          eligibilityBox.innerHTML = `⏳ You can donate again on <strong>${nextDate}</strong> (${data.daysRemaining} day(s) remaining).`;
-          eligibilityBox.className = 'eligibility-card warning';
-        }
-
-      } catch (err) {
-        console.error("Eligibility error:", err);
-        eligibilityBox.innerHTML = `<span class="alert error">❌ Failed to fetch eligibility info.</span>`;
-      }
-    }
-
     function logout() {
-      localStorage.clear();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = 'login.html';
     }
 
-    loadHistory();
+    async function loadDonationHistory() {
+      try {
+        const res = await fetch('http://localhost:3000/api/donor/history', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const donations = await res.json();
+
+        if (!Array.isArray(donations) || donations.length === 0) {
+          document.getElementById('historyContainer').innerHTML = '<p style="color: #b0b0b0; text-align: center; padding: 40px;">No donations yet.</p>';
+          return;
+        }
+
+        let html = '<table><thead><tr><th>Blood Type</th><th>City</th><th>Location</th><th>Date</th><th>Status</th></tr></thead><tbody>';
+        donations.forEach(d => {
+          const status = d.adminApproved ? 'Approved' : 'Pending Admin Review';
+          const statusClass = d.adminApproved ? 'completed' : 'pending';
+          const date = new Date(d.date).toLocaleDateString();
+          html += `<tr>
+            <td><strong>${d.bloodType}</strong></td>
+            <td>${d.city}</td>
+            <td>${d.location}</td>
+            <td>${date}</td>
+            <td><span class="status-badge ${statusClass}">${status}</span></td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('historyContainer').innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        document.getElementById('historyAlert').textContent = 'Failed to load history';
+        document.getElementById('historyAlert').className = 'alert error';
+        document.getElementById('historyAlert').style.display = 'block';
+      }
+    }
+
+    async function loadEligibility() {
+      try {
+        const res = await fetch('http://localhost:3000/api/donor/eligibility', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+
+        const eligDiv = document.getElementById('eligibilityinfo');
+        if (data.eligible) {
+          eligDiv.className = 'eligibility-card eligible';
+          eligDiv.innerHTML = `<strong>✓ You are eligible to donate now!</strong>`;
+        } else {
+          const nextDate = new Date(data.nextEligibleDate).toLocaleDateString();
+          eligDiv.className = 'eligibility-card not-eligible';
+          eligDiv.innerHTML = `<strong>⏳ Next eligible on ${nextDate}</strong><br>(${data.daysRemaining} days remaining)`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   </script>
 </body>
 </html>

@@ -39,23 +39,36 @@ const updateRequestStatus = async (req, res) => {
 
     if (status === 'approved') {
       const bloodType = request.bloodType;
+      const city = request.city || { $exists: true };
+      const unitsRequested = request.units || 1;
 
       const availableUnits = await Donation.countDocuments({
         bloodType,
-        status: 'Completed'
+        city,
+        status: 'Completed',
+        isExpired: false
       });
 
-      if (availableUnits < 1) {
-        return res.status(400).json({ message: `Not enough units of ${bloodType} available.` });
+      if (availableUnits < unitsRequested) {
+        return res.status(400).json({ message: `Not enough units of ${bloodType} available. Requested: ${unitsRequested}, Available: ${availableUnits}` });
       }
 
-      const used = await Donation.findOneAndDelete({
-        bloodType,
-        status: 'Completed'
-      });
+      // ✅ Mark the requested number of units as 'Used'
+      for (let i = 0; i < unitsRequested; i++) {
+        const used = await Donation.findOneAndUpdate(
+          {
+            bloodType,
+            city,
+            status: 'Completed',
+            isExpired: false,
+            expiryDate: { $gt: new Date() }
+          },
+          { status: 'Used' }
+        );
 
-      if (!used) {
-        return res.status(500).json({ message: `Error using ${bloodType} unit.` });
+        if (!used) {
+          return res.status(500).json({ message: `Error using ${bloodType} unit. Only ${i} of ${unitsRequested} units were marked as used.` });
+        }
       }
     }
 
@@ -68,24 +81,37 @@ const updateRequestStatus = async (req, res) => {
   }
 };
 
-// ✅ Get Inventory (Admin Only)
+// ✅ Get Inventory (Admin Only) - City-aware
 const getInventory = async (req, res) => {
   try {
+    const { city } = req.query; // optional filter
+    const matchStage = {
+      status: 'Completed',
+      adminApproved: true,  // 🆕 Only count approved donations
+      isExpired: false,
+      expiryDate: { $gt: new Date() }
+    };
+    if (city) matchStage.city = city;
+
     const inventory = await Donation.aggregate([
-      { $match: { status: { $ne: 'Cancelled' } } },
+      { $match: matchStage },
       {
         $group: {
-          _id: '$bloodType',
-          units: { $sum: 1 }
+          _id: { city: '$city', bloodType: '$bloodType' },
+          units: { $sum: 1 },
+          earliestExpiry: { $min: '$expiryDate' }
         }
       },
       {
         $project: {
-          bloodType: '$_id',
+          city: '$_id.city',
+          bloodType: '$_id.bloodType',
           units: 1,
+          earliestExpiry: 1,
           _id: 0
         }
-      }
+      },
+      { $sort: { city: 1, bloodType: 1 } }
     ]);
 
     res.json(inventory);
@@ -94,24 +120,37 @@ const getInventory = async (req, res) => {
   }
 };
 
-// ✅ Public Inventory
+// ✅ Public Inventory - City-aware
 const getPublicInventory = async (req, res) => {
   try {
+    const { city } = req.query;
+    const matchStage = {
+      status: 'Completed',
+      adminApproved: true,  // 🆕 Only show approved donations publicly
+      isExpired: false,
+      expiryDate: { $gt: new Date() }
+    };
+    if (city) matchStage.city = city;
+
     const inventory = await Donation.aggregate([
-      { $match: { status: 'Completed' } },
+      { $match: matchStage },
       {
         $group: {
-          _id: '$bloodType',
-          units: { $sum: 1 }
+          _id: { city: '$city', bloodType: '$bloodType' },
+          units: { $sum: 1 },
+          earliestExpiry: { $min: '$expiryDate' }
         }
       },
       {
         $project: {
-          bloodType: '$_id',
+          city: '$_id.city',
+          bloodType: '$_id.bloodType',
           units: 1,
+          earliestExpiry: 1,
           _id: 0
         }
-      }
+      },
+      { $sort: { city: 1, bloodType: 1 } }
     ]);
 
     res.json(inventory);
@@ -124,26 +163,49 @@ const getPublicInventory = async (req, res) => {
 const seedInventoryUnits = async (req, res) => {
   try {
     const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+    const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Vijayawada'];
     const dummyDonorId = req.user._id;
     const hospital = 'Central Hospital';
     const donations = [];
 
-    for (let i = 0; i < 50; i++) {
-      const randomBlood = bloodTypes[Math.floor(Math.random() * bloodTypes.length)];
-      donations.push({
-        donor: dummyDonorId,
-        bloodType: randomBlood,
-        location: hospital,
-        status: 'Completed',
-        date: new Date()
-      });
+    // For each city, for each blood type, insert random 3-20 units
+    // with expiry dates randomly between 5 and 42 days from now
+    for (let city of cities) {
+      for (let blood of bloodTypes) {
+        const units = Math.floor(Math.random() * 18) + 3; // 3-20 units
+        for (let i = 0; i < units; i++) {
+          const daysUntilExpiry = Math.floor(Math.random() * 38) + 5; // 5-42 days
+          const expiryDate = new Date(Date.now() + daysUntilExpiry * 24 * 60 * 60 * 1000);
+          donations.push({
+            donor: dummyDonorId,
+            bloodType: blood,
+            location: hospital,
+            city: city,
+            status: 'Completed',
+            adminApproved: true,
+            date: new Date(),
+            expiryDate: expiryDate,
+            isExpired: false
+          });
+        }
+      }
     }
 
     await Donation.insertMany(donations);
-    res.json({ message: '🧪 50 dummy donations inserted successfully.', count: donations.length });
+    res.json({ message: `🧪 ${donations.length} dummy donations seeded across ${cities.length} cities.`, count: donations.length });
   } catch (err) {
     res.status(500).json({ message: 'Seeding error', error: err.message });
   }
+};
+
+// ✅ Get List of Cities
+const getCities = async (req, res) => {
+  const cities = [
+    'Mumbai', 'Delhi', 'Bangalore', 'Chennai',
+    'Hyderabad', 'Kolkata', 'Pune', 'Ahmedabad',
+    'Jaipur', 'Vijayawada'
+  ];
+  res.json(cities);
 };
 
 // 📊 Admin Analytics (FIXED FORMAT)
@@ -234,6 +296,50 @@ const getAdminAnalytics = async (req, res) => {
   }
 };
 
+// ✅ Get All Pending Donations (Admin View)
+const getPendingDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find({ status: 'Scheduled', adminApproved: false })
+      .populate('donor', 'name email city')
+      .sort({ date: -1 });
+    
+    res.json(donations);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// ✅ Approve/Reject Pending Donation
+const approveDonation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { action } = req.body; // 'approve' or 'reject'
+
+    if (!['approve', 'reject'].includes(action)) {
+      return res.status(400).json({ message: "Action must be 'approve' or 'reject'" });
+    }
+
+    const donation = await Donation.findById(id);
+    if (!donation) return res.status(404).json({ message: 'Donation not found' });
+
+    if (donation.status !== 'Scheduled') {
+      return res.status(400).json({ message: 'Only scheduled donations can be approved/rejected' });
+    }
+
+    if (action === 'approve') {
+      donation.status = 'Completed';
+      donation.adminApproved = true;
+    } else {
+      donation.status = 'Cancelled';
+    }
+
+    await donation.save();
+    res.json({ message: `Donation ${action}ed successfully` });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating donation', error: err.message });
+  }
+};
+
 // ✅ Export Controllers
 module.exports = {
   getAllRequests,
@@ -241,5 +347,8 @@ module.exports = {
   getInventory,
   getPublicInventory,
   seedInventoryUnits,
-  getAdminAnalytics
+  getAdminAnalytics,
+  getCities,
+  getPendingDonations,
+  approveDonation
 };

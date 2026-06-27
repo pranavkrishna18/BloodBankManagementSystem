@@ -1,7 +1,7 @@
 // ✅ Load Blood Inventory and Render Chart
 async function loadInventoryChart() {
   try {
-    const res = await fetch("https://blood-bank-system-dtld.onrender.com/api/public/inventory");
+    const res = await fetch("http://localhost:3000/api/admin/public-inventory");
     const rawInventory = await res.json();
 
     const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];

@@ -1,25 +1,36 @@
 const Donation = require('../models/Donation');
 
-// ✅ Publicly accessible inventory endpoint
+// ✅ Publicly accessible inventory endpoint - City-aware
 exports.getPublicInventory = async (req, res) => {
   try {
+    const { city } = req.query;
+    const matchStage = {
+      status: 'Completed',
+      adminApproved: true,
+      isExpired: false,
+      expiryDate: { $gt: new Date() }
+    };
+    if (city) matchStage.city = city;
+
     const inventory = await Donation.aggregate([
-      {
-        $match: { status: 'Completed', adminApproved: true } // Only approved + completed
-      },
+      { $match: matchStage },
       {
         $group: {
-          _id: '$bloodType',
-          units: { $sum: 1 }
+          _id: { city: '$city', bloodType: '$bloodType' },
+          units: { $sum: 1 },
+          earliestExpiry: { $min: '$expiryDate' }
         }
       },
       {
         $project: {
-          bloodType: '$_id',
+          city: '$_id.city',
+          bloodType: '$_id.bloodType',
           units: 1,
+          earliestExpiry: 1,
           _id: 0
         }
-      }
+      },
+      { $sort: { city: 1, bloodType: 1 } }
     ]);
 
     res.status(200).json(inventory);

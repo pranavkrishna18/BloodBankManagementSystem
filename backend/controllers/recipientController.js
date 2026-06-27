@@ -4,26 +4,22 @@ const Request = require('../models/Request');
 // 🩸 Submit a blood request
 const requestBlood = async (req, res) => {
   try {
-    const { bloodType, location, date } = req.body;
+    const { bloodType, location, city, urgency, units, notes } = req.body;
     const recipientId = req.user._id;
 
-    if (!bloodType || !location || !date) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    const selectedDate = new Date(date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // normalize
-
-    if (selectedDate < today) {
-      return res.status(400).json({ message: 'Date cannot be in the past' });
+    if (!bloodType || !location || !city) {
+      return res.status(400).json({ message: 'Blood type, location, and city are required' });
     }
 
     const newRequest = new Request({
       recipient: recipientId,
       bloodType,
       location,
-      date: selectedDate,
+      city,
+      urgency: urgency || 'medium',
+      units: units || 1,
+      notes: notes || '',
+      date: new Date()
     });
 
     await newRequest.save();

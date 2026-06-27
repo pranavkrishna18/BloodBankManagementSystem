@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['donor', 'recipient', 'admin'],
     required: true
+  },
+  city: {
+    type: String,
+    enum: ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Vijayawada'],
+    default: 'Vijayawada'
   }
 });
 
